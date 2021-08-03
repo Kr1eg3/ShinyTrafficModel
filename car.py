@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import numpy as np
 from random import random, uniform
 
@@ -8,7 +10,8 @@ class Car(object):
 
     next_id = 1
 
-    def __init__(self, position, initial_speed, max_speed=2, agent_type='cooperator'):
+    def __init__(self, position, initial_speed, max_speed=2,
+            agent_type='cooperator'):
         self.position = position
         self.initial_speed = initial_speed
         self.car_id = Car.next_id
@@ -23,6 +26,15 @@ class Car(object):
         self.list_of_neighbors = {}
         Car.next_id += 1
 
+        ### model parameters ##
+        self.G = 3
+        self.q = .2
+        self.r = .2
+        self.P1 = .5
+        self.P2 = .4
+        self.P3 = .3
+        self.P4 = .2
+        #######################
         
     def find_neighbors(self, cars_list):
         
@@ -47,7 +59,9 @@ class Car(object):
         car_speed = min(self.max_speed, self.speed + 1)
 
         #rule 2. Slow-to-start
-        
+        if uniform(0, 1) <= self.q:
+            self.s = self.S if uniform(0, 1) <= self.r else 1
+            car_speed = min(car_speed, 1)
         
         #rule 3. Perspective (Quick start)
         

@@ -19,4 +19,12 @@ class Road(object):
         return road
 
                              
+    def get_road_info(self):
+        road_info = {'road length': self.road_length,
+                     'number of lines': self.numb_of_lines,
+                     'number of cars': self.numb_of_cars}
+        return road_info
+
+
+
         
