@@ -10,7 +10,7 @@
 
 
 import numpy as np
-
+from random import random
 
 
 class Road(object):
@@ -40,12 +40,15 @@ class Road(object):
         self.road_length = road_length
         self.numb_of_lines = numb_of_lines
         self.numb_of_cars = numb_of_cars
+        self.__rng = np.random.default_rng()
 
-
+    @property
     def generate_road(self):
-        road = np.random.randint(2, size=(self.numb_of_lines, 
-            self.road_length))
-        
+        road = np.zeros(self.road_length*self.numb_of_lines)
+        road[:self.numb_of_cars] = 1
+        np.random.shuffle(road)
+        road = road.reshape(self.numb_of_lines, self.road_length)
+
         return road
 
                              
@@ -53,6 +56,7 @@ class Road(object):
         road_info = {'road length': self.road_length,
                      'number of lines': self.numb_of_lines,
                      'number of cars': self.numb_of_cars}
+
         return road_info
 
 
