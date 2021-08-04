@@ -1,12 +1,55 @@
 #!/usr/bin/python3
 
+#Code written by 
+#       _          _   __
+#  ___ | |_  _ __ / | / _|  ___
+# / __|| __|| '__|| || |_  / _ \
+# \__ \| |_ | |   | ||  _||  __/
+# |___/ \__||_|   |_||_|   \___|
+#
+
+
 import numpy as np
 from random import random, uniform
 
 
-
 class Car(object):
+    """
+    A class to represent a car
 
+    ...
+
+    Attributes
+    ----------
+    position : np.ndarray
+        car position at the moment
+    initial_speed : int 
+        the speed at which the car starts
+    max_speed : int
+        (oprional: default 2) 
+        maximum possible speed of the car
+    agent_type : str
+        (optional: default 'cooperator')
+        the type of character of the agent, two values are possible:
+        'cooperator' - goood caaar
+        'destructor' - baaaad carr
+
+    Methods
+    -------
+    find_neighbors(cars_list):
+        Description
+    find_gap(args)
+        Description
+    get_car_speed(args)
+        Description
+    get_new_pos(args)
+        Description
+    get_car_info(args)
+        Description
+    take_a_step(args)
+        Description
+
+    """
 
     next_id = 1
 
