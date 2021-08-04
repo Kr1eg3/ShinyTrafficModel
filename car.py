@@ -62,11 +62,11 @@ class Car(object):
         self.max_speed = max_speed
         self.agent_type = agent_type
         self.speed = self.initial_speed
-        self.on_lane = 'first_lane' if self.position[1] == 0 else 'second_lane'
         self.turn_left = np.array([-1, 1])
         self.turn_right = np.array([1, 1])
-        
-        self.list_of_neighbors = {}
+        self.__previous_pos = 0
+        self.__previous_spd = 0
+        self.neighbors_dict = {}
         Car.next_id += 1
 
         ### model parameters ##
@@ -79,9 +79,26 @@ class Car(object):
         self.P4 = .2
         #######################
         
-    def find_neighbors(self, cars_list):
+    def __get_neighbors(self, cars_list, road_matrix):
         
-        #finding forward neighbor
+        for index, value in np.ndenumerate(road_matrix):
+            
+            if value > 0 and != self.car_id:
+                #find forward car id
+                if index[0] == self.position[0] and index[1] > self.position[1]:
+
+ 
+                #find behind car id
+                if index[0] == self.position[0] and
+
+                #find left/right side car id
+                if index[0] != self.position[0] and index[1] == self.position[1]:
+                    self.neighbors_dict['side neighbor id'] = value
+
+                #find behind side car id
+                if index[0] != self.position and  
+
+
 
          
         #forward_neighbor_id = 
@@ -90,16 +107,29 @@ class Car(object):
         if len(cars_list) == 10:
             print('yee')
 
+#all_frames = []
+#
+#for i in range(10):
+#    img = np.random.randint(0, high=255, size=(720, 1280, 3), dtype=np.uint8) # generate a random, noisy image
+#    all_frames.append(Frame(img, i))
+#
+#frames_to_plot = [frame for frame in all_frames if getattr(frame, index) == 5]
+
 
     def find_gap(self):
         gap = 1
         return gap
 
 
-    def get_car_speed(self, gap):
+    def get_car_speed(self, cars_list, neib_list):
+
+        self.__previous_spd = self.speed
+        _next_car = car in cars_list if getattr(car, car_id) == neib_list['forward car id'] 
+        
 
         #rule 1. Acceleration
-        car_speed = min(self.max_speed, self.speed + 1)
+        if gap >= self.G and self.speed <= _next_car.speed:
+            car_speed = min(self.max_speed, self.speed + 1)
 
         #rule 2. Slow-to-start
         if uniform(0, 1) <= self.q:
@@ -128,7 +158,8 @@ class Car(object):
                  'car position': self.position,
                  'car speed': self.speed,
                  'car max speed': self.max_speed,
-                 'car behavior type': self.agent_type}
+                 'car behavior type': self.agent_type,
+                 'neighbors': self.neighbors_dict}
         return info_dict
      
 
