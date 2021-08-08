@@ -29,11 +29,12 @@ if __name__ == "__main__":
             del a
     
     
-    #cars[1].find_neighbors(cars)
-    
-    print(np.shape(road))
-    print(road)
     print(cars)
+
+
+    cars[1].take_a_step(cars)
+    print(cars[1].neighbors_dict)
+
 
     print('test cars created!')
 
