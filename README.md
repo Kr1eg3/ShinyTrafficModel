@@ -23,3 +23,31 @@
 ```
 
 
+
+
+### Linux 64-bit
+
+
+#### Quick start, installing all completers
+
+- Install YCM plugin via [Vundle][]
+- Install cmake, vim and python
+
+```
+apt install build-essential cmake vim-nox python3-dev
+```
+
+- Install mono-complete, go, node, java and npm
+
+```
+apt install mono-complete golang nodejs default-jdk npm
+```
+
+- Compile YCM
+
+```
+cd ~/.vim/bundle/YouCompleteMe
+python3 install.py --all
+```
+
+- For plugging an arbitrary LSP server, check [the relevant section](#plugging-an-arbitrary-lsp-server)
