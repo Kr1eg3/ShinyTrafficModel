@@ -28,26 +28,21 @@
 ### Linux 64-bit
 
 
-#### Quick start, installing all completers
+#### Установка зависимостей и запуск программы
 
-- Install YCM plugin via [Vundle][]
-- Install cmake, vim and python
-
-```
-apt install build-essential cmake vim-nox python3-dev
-```
-
-- Install mono-complete, go, node, java and npm
+- Clone git repo from https://github.com/Kr1eg3/ShinyTrafficModel.git
+- Install requerements.txt
 
 ```
-apt install mono-complete golang nodejs default-jdk npm
+mkdir TrafficPy
+cd TrafficPy
+git clone https://github.com/Kr1eg3/ShinyTrafficModel.git
+cd ShinyTrafficModel
+sudo pip3 install -r requerements.txt
 ```
 
-- Compile YCM
+- Start program
 
 ```
-cd ~/.vim/bundle/YouCompleteMe
-python3 install.py --all
+python3 TrafficModel.py
 ```
-
-- For plugging an arbitrary LSP server, check [the relevant section](#plugging-an-arbitrary-lsp-server)
