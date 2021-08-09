@@ -58,8 +58,8 @@ for car in cars15:
 min_car = min(cars15, key=lambda x: x.pos[0])
 print(min_car.pos, min_car.id)
 
-#a = [car for car in testcars if getattr(car, 'id') == 4]
-#print(*a)
+a = [car for car in testcars if getattr(car, 'id') == 4]
+print(a[0].id)
 
 
 

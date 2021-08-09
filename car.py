@@ -63,9 +63,10 @@ class Car(object):
         self.max_speed = max_speed
         self.agent_type = agent_type
         self.speed = self.initial_speed
+        self.__forward_car = 0
         self.__previous_pos = 0
         self.__previous_spd = 0
-        self.__rnd_brake_spd = 0
+        self.__rnd_brake_spd = 1
         self.neighbors_dict = {}
         Car.next_id += 1
 
@@ -81,6 +82,7 @@ class Car(object):
         self.P4 = .2
         #######################
         
+       
     def __get_neighbors(self, cars_list):
         
         #forward car
@@ -88,25 +90,25 @@ class Car(object):
             'position')[1] > self.position[1] and getattr(car,
                 'position')[0] == self.position[0]]
         __fcar = min(__cars, key=lambda x: x.position[1])
-        self.neighbors_dict['forward neighbor_id'] = __fcar.car_id
+        self.neighbors_dict['forward neighbor id'] = __fcar.car_id
 
         #car behind
         __cars = [car for car in cars_list if getattr(car,
             'position')[1] < self.position[1] and getattr(car,
                 'position')[0] == self.position[0]]
         __fcar = max(__cars, key=lambda x: x.position[1])
-        self.neighbors_dict['behind neighbor_id'] = __fcar.car_id
+        self.neighbors_dict['behind neighbor id'] = __fcar.car_id
 
         #left/right car
         __fcar = [car for car in cars_list if getattr(car,
             'position')[1] == self.position[1] and getattr(car,
                 'position')[0] < self.position[0]]
-        self.neighbors_dict['left neighbor_id'] = __fcar.car_id
+        self.neighbors_dict['left neighbor id'] = __fcar.car_id
 
         __fcar = [car for car in cars_list if getattr(car,
             'position')[1] == self.position[1] and getattr(car,
                 'position')[0] >  self.position[0]]
-        self.neighbors_dict['right neighbor_id'] = __fcar.car_id
+        self.neighbors_dict['right neighbor id'] = __fcar.car_id
 
         #left/right side car
         __cars = [car for car in cars_list if getattr(car,
@@ -134,21 +136,6 @@ class Car(object):
         self.neighbors_dict['right side behind car id'] = __fcar.car_id
 
 
-#all_frames = []
-#
-#for i in range(10):
-#    img = np.random.randint(0, high=255, size=(720, 1280, 3), dtype=np.uint8) # generate a random, noisy image
-#    all_frames.append(Frame(img, i))
-#
-#frames_to_plot = [frame for frame in all_frames if getattr(frame, index) == 5]
-
-
-#import operator
-#min([MyClass(3), MyClass(1), MyClass(2)], key=operator.attrgetter('foo'))
-#MyClass(1)
-
-
-
     def __get_gap(self, cars_list):
         __forward_car = [car for car in cars_list if getattr(car,
             'car_id') == self.neighbors_dict['forward neighbor car id']]
@@ -158,8 +145,9 @@ class Car(object):
 
     def get_car_speed(self, cars_list):
         
+        #initial 
         self.__previous_spd = self.speed
-        #__next_car = 
+        gap = __get_gap(cars_list) 
         
 
         #rule 1. Acceleration
@@ -169,11 +157,14 @@ class Car(object):
         #rule 2. Slow-to-start
         if uniform(0, 1) <= self.q:
             self.s = self.S if uniform(0, 1) <= self.r else 1
-            __car_speed = min(car_speed, 1)
+            __scar = self.__forward_car if self.s == 1 else [car for car in cars_list 
+                    if getattr(car, 'car_id') == self.__forward_car.neighbors_dict['forward
+                    neighbor id']][0]
+            __car_speed = min(car_speed, __scar.__previous_pos[1] - self.__previous_pos[1] - self.s)
         
         #rule 3. Perspective (Quick start)
+        __car_speed = min(__car_speed, __scar.position[1] - self.position[1] - self.s)
         
-
         #rule 4. Random brake
         if uniform(0, 1) < 1 - self.braking_prob:
             __car_speed = max(1, __car_speed - 1)
@@ -189,15 +180,14 @@ class Car(object):
                     self.braking_prob = self.P4
     
         #rule 5. Avoid collision
-        __car_speed = min(__car_speed, self.__get_gap() - 1 + __next_car.__rnd_brake_spd)
-
-        
+        __car_speed = min(__car_speed, gap - 1 + self.__rnd_brake_spd)
+      
         return __car_speed
 
-    def get_new_pos(self, gap):
-        #speed = self.get_car_speed(gap)
-        new_pos = (self.position[1] + speed, self.position[0])
-        return new_pos
+
+    @property
+    def get_new_pos(self):
+        self.position[1] = self.position[1] + self.speed
 
     
     def get_car_info(self):
@@ -213,8 +203,8 @@ class Car(object):
 
     def take_a_step(self, cars_list):
         self.__get_neighbors(cars_list)
-        #gap = self.find_gap()
-        #self.position = self.get_new_pos(gap) 
+        self.speed = get_car_speed(cars_list)
+        self.get_new_pos 
         
 
 
