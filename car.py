@@ -149,7 +149,6 @@ class Car(object):
         self.__previous_spd = self.speed
         gap = __get_gap(cars_list) 
         
-
         #rule 1. Acceleration
         if gap >= self.G and self.speed <= __next_car.speed:
             __car_speed = min(self.max_speed, self.speed + 1)
