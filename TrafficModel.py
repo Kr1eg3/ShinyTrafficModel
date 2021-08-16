@@ -7,11 +7,11 @@ from car import Car
 from road import Road
 from random import randint, random
 import numpy as np
-
+from pprint import *
 
 
 #vars in settings.py
-numb_of_cars = 4
+numb_of_cars = 10
 numb_of_lines = 2
 road_length = 10
 
@@ -19,7 +19,6 @@ if __name__ == "__main__":
 
     road_exmpl = Road(road_length, numb_of_lines, numb_of_cars)
     road = road_exmpl.generate_road
-    print(road)
     cars = []
     for index, value in np.ndenumerate(road):
         if value == 1:
@@ -28,13 +27,12 @@ if __name__ == "__main__":
             cars.append(a)
             del a
     
-    
-    print(cars)
+    for car in cars:
+        car.take_a_step(cars)
 
-
-    cars[1].take_a_step(cars)
-    print(cars[1].neighbors_dict)
-
+    print(road)
+    print(cars[1].car_id)
+    pprint(cars[1].get_car_info)
 
     print('test cars created!')
 

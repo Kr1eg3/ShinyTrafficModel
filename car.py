@@ -71,15 +71,15 @@ class Car(object):
         Car.next_id += 1
 
         ### model parameters ##
-        self.G = 3
-        self.S = 1
+        self.G = 15
+        self.S = 2
         self.s = 1
-        self.q = .2
+        self.q = .99
         self.r = .2
-        self.P1 = .5
-        self.P2 = .4
-        self.P3 = .3
-        self.P4 = .2
+        self.P1 = .999
+        self.P2 = .99
+        self.P3 = .98
+        self.P4 = .01
         #######################
         
        
@@ -89,57 +89,130 @@ class Car(object):
         __cars = [car for car in cars_list if getattr(car,
             'position')[1] > self.position[1] and getattr(car,
                 'position')[0] == self.position[0]]
-        __fcar = min(__cars, key=lambda x: x.position[1])
-        self.neighbors_dict['forward neighbor id'] = __fcar.car_id
+        if not __cars:
+            __cars = [car for car in cars_list if getattr(car,
+                'position')[1] < self.position[1] and getattr(car,
+                    'position')[0] == self.position[0]]
+            if not __cars:
+                self.neighbors_dict['forward neighbor id'] = 'Nan'
+            else:
+                __fcar = min(__cars, key=lambda x: x.position[1])
+                self.neighbors_dict['forward neighbor id'] = __fcar.car_id
+        else:
+            __fcar = min(__cars, key=lambda x: x.position[1])
+            self.neighbors_dict['forward neighbor id'] = __fcar.car_id
 
         #car behind
         __cars = [car for car in cars_list if getattr(car,
             'position')[1] < self.position[1] and getattr(car,
                 'position')[0] == self.position[0]]
-        __fcar = max(__cars, key=lambda x: x.position[1])
-        self.neighbors_dict['behind neighbor id'] = __fcar.car_id
+        if not __cars:
+            __cars = [car for car in cars_list if getattr(car,
+                'position')[1] > self.position[1] and getattr(car,
+                    'position')[0] == self.position[0]]
+            if not __cars:
+                self.neighbors_dict['behind neighbor id'] = 'Nan'
+            else:
+                __fcar = min(__cars, key=lambda x: x.position[1])
+                self.neighbors_dict['behind neighbor id'] = __fcar.car_id
+        else:
+            __fcar = max(__cars, key=lambda x: x.position[1])
+            self.neighbors_dict['behind neighbor id'] = __fcar.car_id
 
         #left/right car
         __fcar = [car for car in cars_list if getattr(car,
             'position')[1] == self.position[1] and getattr(car,
                 'position')[0] < self.position[0]]
-        self.neighbors_dict['left neighbor id'] = __fcar.car_id
+        if not __fcar:
+            self.neighbors_dict['left neighbor id'] = 'Nan'
+        else:
+            __fcar = __fcar[0]
+            self.neighbors_dict['left neighbor id'] = __fcar.car_id
 
         __fcar = [car for car in cars_list if getattr(car,
             'position')[1] == self.position[1] and getattr(car,
                 'position')[0] >  self.position[0]]
-        self.neighbors_dict['right neighbor id'] = __fcar.car_id
+        if not __fcar:
+            self.neighbors_dict['right neighbor id'] = 'Nan'
+        else:
+            __fcar = __fcar[0]
+            self.neighbors_dict['right neighbor id'] = __fcar.car_id
 
         #left/right side car
+        ####################################################################
+
         __cars = [car for car in cars_list if getattr(car,
             'position')[1] > self.position[1] and getattr(car,
                 'position')[0] < self.position[0]]
-        __fcar = min(__cars, key=lambda x: x.position[1])
-        self.neighbors_dict['left side forward car id'] = __fcar.car_id
+        if not __cars:
+            __cars = [car for car in cars_list if getattr(car,
+                'position')[1] < self.position[1] and getattr(car,
+                    'position')[0] < self.position[0]]
+            if not __cars:
+                self.neighbors_dict['left side forward car id'] = 'Nan'
+            else:
+                __fcar = min(__cars, key=lambda x: x.position[1])
+                self.neighbors_dict['left side forward car id'] = __fcar.car_id
+        else:
+            __fcar = min(__cars, key=lambda x: x.position[1])
+            self.neighbors_dict['left side forward car id'] = __fcar.car_id
+        #####################################################################
 
         __cars = [car for car in cars_list if getattr(car,
              'position')[1] < self.position[1] and getattr(car,
                  'position')[0] < self.position[0]]
-        __fcar = max(__cars, key=lambda x: x.position[1])
-        self.neighbors_dict['left side behind car id'] = __fcar.car_id
+        if not __cars:
+            __cars = [car for car in cars_list if getattr(car,
+                'position')[1] > self.position[1] and getattr(car,
+                    'position')[0] < self.position[0]]
+            if not __cars:
+                self.neighbors_dict['left side behind car'] = 'Nan'
+            else:
+                __fcar = max(__cars, key=lambda x: x.position[1])
+                self.neighbors_dict['left side behind car id'] = __fcar.car_id
+        else:
+            __fcar = max(__cars, key=lambda x: x.position[1])
+            self.neighbors_dict['left side behind car id'] = __fcar.car_id
+        #####################################################################
         
         __cars = [car for car in cars_list if getattr(car, 
             'position')[1] > self.position[1] and getattr(car, 
                 'position')[0] > self.position[0]]
-        __fcar = min(__cars, key=lambda x: x.position[1])
-        self.neighbors_dict['rigth side forward car id'] = __fcar.car_id
+        if not __cars:
+            __cars = [car for car in cars_list if getattr(car,
+                'position')[1] < self.position[1] and getattr(car,
+                    'position')[0] < self.position[0]]
+            if not __cars:
+                self.neighbors_dict['right side forward car id'] = 'Nan'
+            else:
+                __fcar = min(__cars, key=lambda x: x.position[1])
+                self.neighbors_dict['right side forward car id'] = __fcar.car_id
+        else:
+            __fcar = min(__cars, key=lambda x: x.position[1])
+            self.neighbors_dict['rigth side forward car id'] = __fcar.car_id
+        #####################################################################
 
         __cars = [car for car in cars_list if getattr(car,
             'position')[1] < self.position[1] and getattr(car,
                 'position')[0] > self.position[0]]
-        __fcar = max(__cars, key=lambda x: x.position[1])
-        self.neighbors_dict['right side behind car id'] = __fcar.car_id
-
+        if not __cars:
+            __cars = [car for car in cars_list if getattr(car,
+                'position')[1] > self.position[1] and getattr(car,
+                    'position')[0] < self.position[0]]
+            if not __cars:
+                self.neighbors_dict['right side behind car id'] = 'Nan'
+            else:
+                __fcar = max(__cars, key=lambda x: x.position[1])
+                self.neighbors_dict['right side behind car id'] = __fcar.car_id
+        else:
+            __fcar = max(__cars, key=lambda x: x.position[1])
+            self.neighbors_dict['right side behind car id'] = __fcar.car_id
+        #####################################################################
 
     def __get_gap(self, cars_list):
         __forward_car = [car for car in cars_list if getattr(car,
-            'car_id') == self.neighbors_dict['forward neighbor car id']]
-        __gap = __forward_car.position[1] - self.position[1] 
+            'car_id') == self.neighbors_dict['forward neighbor id']]
+        __gap = __forward_car[0].position[1] - self.position[1] 
         return __gap
 
 
@@ -147,8 +220,11 @@ class Car(object):
         
         #initial 
         self.__previous_spd = self.speed
-        gap = __get_gap(cars_list) 
+        gap = self.__get_gap(cars_list) 
+        __car_speed = self.speed
+       # __next_car = 
         
+
         #rule 1. Acceleration
         if gap >= self.G and self.speed <= __next_car.speed:
             __car_speed = min(self.max_speed, self.speed + 1)
@@ -156,10 +232,9 @@ class Car(object):
         #rule 2. Slow-to-start
         if uniform(0, 1) <= self.q:
             self.s = self.S if uniform(0, 1) <= self.r else 1
-            __scar = self.__forward_car if self.s == 1 else [car for car in cars_list 
-                    if getattr(car, 'car_id') == self.__forward_car.neighbors_dict['forward
-                    neighbor id']][0]
-            __car_speed = min(car_speed, __scar.__previous_pos[1] - self.__previous_pos[1] - self.s)
+            __scar = self.__forward_car if self.s == 1 else [car for car in cars_list if getattr(car,
+                'car_id') == self.__forward_car.neighbors_dict['forward neighbor id']][0]
+            __car_speed = min(__car_speed, __scar.__previous_pos[1] - self.__previous_pos[1] - self.s)
         
         #rule 3. Perspective (Quick start)
         __car_speed = min(__car_speed, __scar.position[1] - self.position[1] - self.s)
@@ -188,7 +263,7 @@ class Car(object):
     def get_new_pos(self):
         self.position[1] = self.position[1] + self.speed
 
-    
+    @property 
     def get_car_info(self):
         info_dict = {'car id': self.car_id,
                  'car previous position': self.__previous_pos,
@@ -202,8 +277,8 @@ class Car(object):
 
     def take_a_step(self, cars_list):
         self.__get_neighbors(cars_list)
-        self.speed = get_car_speed(cars_list)
-        self.get_new_pos 
+       # self.speed = self.get_car_speed(cars_list)
+       # self.get_new_pos 
         
 
 
