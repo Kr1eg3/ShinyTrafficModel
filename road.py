@@ -12,7 +12,7 @@
 import numpy as np
 from random import random
 from vehicle import Vehicle, Car
-
+from pprint import pprint
 
 
 class Road:
@@ -53,13 +53,11 @@ class Road:
             __ids.append(v.id)
         print(__ids)
 
-
     def _get_vehicles_pos(self, list_of_vehicles):
         __poss = []
         for v in list_of_vehicles:
             __poss.append((v.posx, v.posy))
         print(__poss)
-
 
     def _generate_road(self):
         __road = np.zeros(self.road_length * self.numb_of_lanes)
@@ -69,6 +67,16 @@ class Road:
 
         return __road
 
+    def _show_id_matrix(self, list_of_vehicles, i=1):
+        id_matrix = np.zeros((self.numb_of_lanes, self.road_length))
+        for v in list_of_vehicles:
+            if v.posx >= self.road_length:
+                j = (v.posx - self.road_length) % 10
+                id_matrix[v.posy][j] = v.id
+            else:
+                id_matrix[v.posy][v.posx] = v.id
+                
+        print(id_matrix)
 
     def _divide_road(self, list_of_vehicles):
         # Создать переменную с числом
@@ -87,28 +95,23 @@ class Road:
 
         return __all_lanes
 
-
     def _sort_roads(self, list_of_lanes):
         for lane in list_of_lanes:
             lane.sort(key=lambda x: x.posx, reverse=False)
 
-
-
     def create_vehicles(self):
         if not self.created:
             road_matrix = self._generate_road()
-            print(road_matrix)
             vehicles = []
             for index, value in np.ndenumerate(road_matrix):
                 if value == 1:
-                    c = Car(posx=index[1], posy=index[0], initial_speed=0)
+                    c = Car(posx=index[1], posy=index[0], initial_speed=3, road_length=self.road_length)
                     vehicles.append(c)
                     del c
         self.created = True
 
         return vehicles
 
-                             
     def get_road_info(self):
         road_info = {'road length': self.road_length,
                      'number of lanes': self.numb_of_lines,
@@ -116,33 +119,41 @@ class Road:
 
         return road_info
 
-
-    def evaluate_road(self):
+    def evaluate_road(self, show_speed=True, show_matrices=True):
         # Create list with vehicles 
         vehicles = self.create_vehicles()
+
+        # Show id matrix
+        if show_matrices == True:
+            print('____________initial matrix________________')
+            self._show_id_matrix(vehicles)
+            print('____________iteration = 0_________________')
 
         # Main loop
         for i in range(self.n_iters):
             all_lanes = self._divide_road(vehicles)
-            self._get_vehicles_pos(all_lanes[0])
-            self._get_vehicles_pos(all_lanes[1])
-
             self._sort_roads(all_lanes)
-            self._get_vehicles_pos(all_lanes[0])
-            self._get_vehicles_pos(all_lanes[1])            
-
+         
             for vehicle in vehicles:
                 vehicle.get_neighbors(all_lanes)
-                
+            
             for vehicle in vehicles:
-                vehicle.get_new_speed()
-                vehicle.move()
+                vehicle.get_si_neighbor()
 
-        self._get_vehicles_id(vehicles)
-        self._get_vehicles_pos(vehicles)
+            for vehicle in vehicles:
+                vehicle.get_new_speed(self.road_length, show_speed)
 
+            for vehicle in vehicles:
+                vehicle.move(self.road_length)
 
+            if show_matrices == True:
+                self._show_id_matrix(vehicles, i)
+                print('____________iteration =', i+1,'_________________')
 
-r = Road(road_length=10, numb_of_lanes=2, numb_of_vehicles=5, n_iters=1)   
-r.evaluate_road()
+        print('End of calculations!')
+
+r = Road(road_length=10, numb_of_lanes=2, numb_of_vehicles=8, n_iters=100)   
+
+# Start processing
+r.evaluate_road(show_speed=True, show_matrices=True)
 
